@@ -664,30 +664,203 @@ function openCartDrawer(isOpen) {
   }
 }
 
-// Checkout simulation
+// Multi-Step Checkout State
+let checkoutState = {
+  orderTotal: 0,
+  itemsSnapshot: [],
+  customer: {
+    name: '',
+    phone: '',
+    email: '',
+    sendSms: true,
+    sendEmail: true
+  }
+};
+
+// Open Checkout Modal & Start at Step 1
 window.handleCheckout = function() {
   if (state.cart.length === 0) {
-    showToast('Your bag is empty! Add some treats first.');
+    showToast('Your bag is empty! Add some treats first. ☕');
     return;
   }
 
+  // Calculate order total
+  const subtotal = state.cart.reduce((acc, curr) => acc + (curr.rawPrice * curr.qty), 0);
+  const tax = subtotal * 0.085;
+  const total = subtotal + tax;
+  checkoutState.orderTotal = total;
+  checkoutState.itemsSnapshot = [...state.cart];
+
+  // Update total displays
+  const formattedTotal = `$${total.toFixed(2)}`;
+  const step1TotalEl = document.getElementById('modalStep1Total');
+  const qrAmountEl = document.getElementById('modalQrAmount');
+  if (step1TotalEl) step1TotalEl.textContent = formattedTotal;
+  if (qrAmountEl) qrAmountEl.textContent = formattedTotal;
+
+  // Generate dynamic QR Code for payment
+  const qrImageEl = document.getElementById('paymentQrImage');
+  if (qrImageEl) {
+    const upiPayload = encodeURIComponent(`upi://pay?pa=cafehub@upi&pn=CafeHub&am=${total.toFixed(2)}&cu=USD&tn=OrderCafeHub`);
+    qrImageEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${upiPayload}`;
+  }
+
+  // Close Cart Drawer and Open Modal
   openCartDrawer(false);
+  goToStep1();
 
-  // Generate cool random order number
-  const orderNumber = '#HUB-' + Math.floor(1000 + Math.random() * 9000);
-  const orderNumEl = document.getElementById('modalOrderNumber');
-  if (orderNumEl) orderNumEl.textContent = orderNumber;
-
-  // Open modal
   const modal = document.getElementById('orderModal');
   if (modal) modal.classList.add('open');
-
-  // Reset cart
-  state.cart = [];
-  updateCartUI();
 };
 
-// Toast notification
+// Step 1: Customer Contact
+window.goToStep1 = function() {
+  setCheckoutPane(1);
+};
+
+// Step 2: QR Payment (after validation)
+window.goToStep2 = function() {
+  const name = document.getElementById('custName')?.value.trim();
+  const phone = document.getElementById('custPhone')?.value.trim();
+  const email = document.getElementById('custEmail')?.value.trim();
+  const sendSms = document.getElementById('sendSmsToggle')?.checked;
+  const sendEmail = document.getElementById('sendEmailToggle')?.checked;
+
+  if (!name) {
+    showToast('Please enter your full name');
+    return;
+  }
+  if (!phone && !email) {
+    showToast('Please provide a phone number or email for your confirmation');
+    return;
+  }
+
+  checkoutState.customer = { name, phone, email, sendSms, sendEmail };
+  setCheckoutPane(2);
+};
+
+// Step 3: Confirm Payment & Official Dispatch
+window.confirmPaymentAndFinish = function() {
+  const orderNumber = '#HUB-' + Math.floor(1000 + Math.random() * 9000);
+  const finalOrderNumEl = document.getElementById('modalFinalOrderNumber');
+  if (finalOrderNumEl) finalOrderNumEl.textContent = orderNumber;
+
+  const { name, phone, email, sendSms, sendEmail } = checkoutState.customer;
+
+  // Setup SMS Dispatch Notice
+  const smsNoticeEl = document.getElementById('smsDispatchNotice');
+  const smsTargetEl = document.getElementById('smsTargetText');
+  if (smsNoticeEl && smsTargetEl) {
+    if (sendSms && phone) {
+      smsNoticeEl.style.display = 'flex';
+      smsTargetEl.textContent = `Pickup alert & tracking dispatched to ${phone}`;
+    } else {
+      smsNoticeEl.style.display = 'none';
+    }
+  }
+
+  // Setup Email Dispatch Notice
+  const emailNoticeEl = document.getElementById('emailDispatchNotice');
+  const emailTargetEl = document.getElementById('emailTargetText');
+  if (emailNoticeEl && emailTargetEl) {
+    if (sendEmail && email) {
+      emailNoticeEl.style.display = 'flex';
+      emailTargetEl.textContent = `Official tax invoice & digital receipt sent to ${email}`;
+    } else {
+      emailNoticeEl.style.display = 'none';
+    }
+  }
+
+  // Populate Itemized Digital Receipt Box
+  const receiptBox = document.getElementById('finalReceiptBox');
+  if (receiptBox) {
+    const itemsHtml = checkoutState.itemsSnapshot.map(item => `
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem; color: var(--text-muted);">
+        <span>${item.qty}x ${item.name}</span>
+        <span>$${(item.rawPrice * item.qty).toFixed(2)}</span>
+      </div>
+    `).join('');
+
+    receiptBox.innerHTML = `
+      <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; border-bottom: 1px dashed var(--border-subtle); padding-bottom: 0.4rem;">
+        Receipt for: ${name || 'Valued Guest'}
+      </div>
+      ${itemsHtml}
+      <div style="display: flex; justify-content: space-between; font-weight: 700; color: var(--accent-terracotta); margin-top: 0.6rem; border-top: 1px dashed var(--border-subtle); padding-top: 0.4rem;">
+        <span>Total Paid:</span>
+        <span>$${checkoutState.orderTotal.toFixed(2)}</span>
+      </div>
+    `;
+  }
+
+  // Setup WhatsApp Direct Order Link
+  const whatsappBtn = document.getElementById('whatsappShareBtn');
+  if (whatsappBtn) {
+    const itemsList = checkoutState.itemsSnapshot.map(i => `${i.qty}x ${i.name}`).join(', ');
+    const textMsg = encodeURIComponent(
+      `☕ Cafe Hub Order Confirmation\nOrder: ${orderNumber}\nCustomer: ${name}\nItems: ${itemsList}\nTotal: $${checkoutState.orderTotal.toFixed(2)}\nStatus: Paid via QR`
+    );
+    whatsappBtn.href = `https://wa.me/?text=${textMsg}`;
+  }
+
+  // Switch to Step 3
+  setCheckoutPane(3);
+
+  // Clear cart
+  state.cart = [];
+  updateCartUI();
+
+  showToast(`🎉 Order ${orderNumber} confirmed! Confirmation dispatched.`);
+};
+
+// Stepper Switcher
+function setCheckoutPane(step) {
+  // Panes
+  document.getElementById('checkoutStep1')?.classList.toggle('active', step === 1);
+  document.getElementById('checkoutStep2')?.classList.toggle('active', step === 2);
+  document.getElementById('checkoutStep3')?.classList.toggle('active', step === 3);
+
+  // Nodes
+  const node1 = document.getElementById('stepNode1');
+  const node2 = document.getElementById('stepNode2');
+  const node3 = document.getElementById('stepNode3');
+  const conn1 = document.getElementById('stepConnector1');
+  const conn2 = document.getElementById('stepConnector2');
+
+  if (node1) {
+    node1.classList.toggle('active', step === 1);
+    node1.classList.toggle('completed', step > 1);
+  }
+  if (conn1) conn1.classList.toggle('completed', step > 1);
+
+  if (node2) {
+    node2.classList.toggle('active', step === 2);
+    node2.classList.toggle('completed', step > 2);
+  }
+  if (conn2) conn2.classList.toggle('completed', step > 2);
+
+  if (node3) {
+    node3.classList.toggle('active', step === 3);
+    node3.classList.toggle('completed', step === 3);
+  }
+}
+
+// Copy UPI ID helper
+window.copyUpiId = function() {
+  navigator.clipboard.writeText('cafehub@upi').then(() => {
+    showToast('🔑 Copied Pay ID: cafehub@upi');
+  }).catch(() => {
+    showToast('Pay ID: cafehub@upi');
+  });
+};
+
+// Close checkout modal
+window.closeCheckoutModal = function() {
+  const modal = document.getElementById('orderModal');
+  if (modal) modal.classList.remove('open');
+};
+
+// Toast notification helper
 function showToast(message) {
   let toast = document.getElementById('toastNotice');
   if (!toast) {
@@ -702,5 +875,6 @@ function showToast(message) {
 
   setTimeout(() => {
     toast.classList.remove('show');
-  }, 2600);
+  }, 2800);
 }
+

@@ -385,24 +385,177 @@
     </div>
   </aside>
 
-  <!-- Checkout Success Modal -->
+  <!-- Interactive 3-Step Checkout & Payment Modal -->
   <div class="modal-overlay" id="orderModal">
-    <div class="modal-card">
-      <div class="modal-icon-bounce">☕✨</div>
-      <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Order Manifested!</h2>
-      <p style="color: var(--text-muted); font-size: 0.95rem;">
-        The baristas are already crafting your drinks with main character precision.
-      </p>
-      
-      <div class="order-token" id="modalOrderNumber">#HUB-8842</div>
-      
-      <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 2rem;">
-        Estimated preparation time: <strong>6 - 8 minutes</strong>. Pick up at the neon counter!
-      </p>
-      
-      <button class="btn-primary" id="closeModalBtn" style="width: 100%; justify-content: center;">
-        Awesome, Got It!
+    <div class="modal-card checkout-modal-card">
+      <button class="modal-close-x" id="closeModalBtn" aria-label="Close Checkout">
+        <i class="fa-solid fa-xmark"></i>
       </button>
+
+      <!-- Step Indicator -->
+      <div class="checkout-stepper">
+        <div class="step-node active" id="stepNode1">
+          <span class="step-num">1</span>
+          <span class="step-label">Contact</span>
+        </div>
+        <div class="step-connector" id="stepConnector1"></div>
+        <div class="step-node" id="stepNode2">
+          <span class="step-num">2</span>
+          <span class="step-label">QR Pay</span>
+        </div>
+        <div class="step-connector" id="stepConnector2"></div>
+        <div class="step-node" id="stepNode3">
+          <span class="step-num">3</span>
+          <span class="step-label">Receipt</span>
+        </div>
+      </div>
+
+      <!-- STEP 1: Customer Contact & Notifications -->
+      <div class="checkout-step-pane active" id="checkoutStep1">
+        <div class="step-heading-group">
+          <h3>Customer & Notification Details</h3>
+          <p>Where should we send your official order confirmation and pickup alert?</p>
+        </div>
+
+        <form id="customerInfoForm" onsubmit="event.preventDefault(); goToStep2();">
+          <div class="form-group">
+            <label for="custName"><i class="fa-regular fa-user"></i> Full Name</label>
+            <input type="text" id="custName" placeholder="e.g. Alex Morgan" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="custPhone"><i class="fa-solid fa-mobile-screen"></i> Mobile Number</label>
+              <input type="tel" id="custPhone" placeholder="e.g. +1 (555) 234-5678" required />
+            </div>
+            <div class="form-group">
+              <label for="custEmail"><i class="fa-regular fa-envelope"></i> Email Address</label>
+              <input type="email" id="custEmail" placeholder="e.g. alex@example.com" required />
+            </div>
+          </div>
+
+          <div class="notification-pref-box">
+            <div class="pref-title">Official Confirmation Dispatch:</div>
+            <label class="pref-checkbox">
+              <input type="checkbox" id="sendSmsToggle" checked />
+              <span><i class="fa-solid fa-comment-sms"></i> Send SMS pickup alert with live status</span>
+            </label>
+            <label class="pref-checkbox">
+              <input type="checkbox" id="sendEmailToggle" checked />
+              <span><i class="fa-solid fa-receipt"></i> Send official invoice & detailed digital receipt via Email</span>
+            </label>
+          </div>
+
+          <div class="order-mini-summary">
+            <span>Order Total:</span>
+            <strong id="modalStep1Total">$0.00</strong>
+          </div>
+
+          <button type="submit" class="btn-primary modal-action-btn">
+            <span>Proceed to QR Payment</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- STEP 2: Scan & Pay with QR Code -->
+      <div class="checkout-step-pane" id="checkoutStep2">
+        <div class="step-heading-group">
+          <h3>Scan to Pay via QR Code</h3>
+          <p>Scan with any payment app to complete your order</p>
+        </div>
+
+        <div class="qr-payment-wrapper">
+          <div class="qr-scanner-frame">
+            <img 
+              id="paymentQrImage" 
+              src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=cafehub@upi&pn=CafeHub&am=15.00&cu=USD&tn=CafeHubOrder" 
+              alt="Scan to Pay QR Code" 
+              class="qr-code-img" 
+            />
+            <div class="qr-scan-line"></div>
+          </div>
+
+          <div class="qr-payment-details">
+            <div class="pay-amount-badge">
+              <span>Amount to Pay</span>
+              <h2 id="modalQrAmount">$0.00</h2>
+            </div>
+
+            <div class="upi-id-row">
+              <span>Pay ID: <strong>cafehub@upi</strong></span>
+              <button type="button" class="copy-upi-btn" onclick="copyUpiId()">
+                <i class="fa-regular fa-copy"></i> Copy
+              </button>
+            </div>
+
+            <div class="supported-apps">
+              <span class="app-pill"><i class="fa-brands fa-google-pay"></i> GPay</span>
+              <span class="app-pill"><i class="fa-brands fa-apple-pay"></i> Apple Pay</span>
+              <span class="app-pill"><i class="fa-solid fa-qrcode"></i> PhonePe / Paytm</span>
+              <span class="app-pill"><i class="fa-regular fa-credit-card"></i> UPI / Card</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-buttons-row">
+          <button type="button" class="btn-secondary" onclick="goToStep1()">
+            <i class="fa-solid fa-arrow-left"></i> Back
+          </button>
+          <button type="button" class="btn-primary modal-action-btn" onclick="confirmPaymentAndFinish()">
+            <i class="fa-solid fa-check-circle"></i>
+            <span>I Have Paid • Confirm Order</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Official Confirmation & Receipt -->
+      <div class="checkout-step-pane" id="checkoutStep3">
+        <div class="modal-icon-bounce">☕✨</div>
+        <h2 style="font-size: 1.7rem; margin-bottom: 0.35rem;">Order Officially Confirmed!</h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1rem;">
+          Your payment was verified. The baristas are prepping your order right now!
+        </p>
+
+        <div class="order-token" id="modalFinalOrderNumber">#HUB-8842</div>
+
+        <!-- Official Dispatch Notification Box -->
+        <div class="dispatch-alert-card">
+          <div class="dispatch-item" id="smsDispatchNotice">
+            <i class="fa-solid fa-circle-check" style="color: #8ED07B;"></i>
+            <div>
+              <strong>SMS Dispatched:</strong>
+              <p id="smsTargetText">Pickup alert sent to +1 (555) 234-5678</p>
+            </div>
+          </div>
+          <div class="dispatch-item" id="emailDispatchNotice">
+            <i class="fa-solid fa-circle-check" style="color: #8ED07B;"></i>
+            <div>
+              <strong>Email Dispatched:</strong>
+              <p id="emailTargetText">Official tax invoice sent to customer@example.com</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Summary Box -->
+        <div class="receipt-summary-box" id="finalReceiptBox">
+          <!-- Injected by app.js with ordered items list -->
+        </div>
+
+        <div class="receipt-actions-row">
+          <button type="button" class="btn-secondary" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> Print Receipt
+          </button>
+          <a id="whatsappShareBtn" href="#" target="_blank" class="btn-secondary whatsapp-btn">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Order
+          </a>
+        </div>
+
+        <button class="btn-primary" onclick="closeCheckoutModal()" style="width: 100%; justify-content: center; margin-top: 1.25rem;">
+          Back to Cafe Hub
+        </button>
+      </div>
+
     </div>
   </div>
 
