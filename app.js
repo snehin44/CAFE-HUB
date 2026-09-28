@@ -358,6 +358,9 @@ let state = {
 
 // DOM Initializer
 document.addEventListener('DOMContentLoaded', () => {
+  if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY) {
+    emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY });
+  }
   renderMenu();
   setupEventListeners();
   updateEraResult('lockin');
@@ -664,6 +667,15 @@ function openCartDrawer(isOpen) {
   }
 }
 
+// ==========================================
+// ✉️ EmailJS Configuration for Real Email Delivery
+// ==========================================
+const EMAILJS_CONFIG = {
+  PUBLIC_KEY: 'LPZYU_MtKJwORoXjz',
+  SERVICE_ID: 'service_02xc7fq',
+  TEMPLATE_ID: 'template_oj9fryg'
+};
+
 // Multi-Step Checkout State
 let checkoutState = {
   orderTotal: 0,
@@ -759,13 +771,50 @@ window.confirmPaymentAndFinish = function() {
     }
   }
 
-  // Setup Email Dispatch Notice
+  // Setup Email Dispatch Notice & Real EmailJS Sending
   const emailNoticeEl = document.getElementById('emailDispatchNotice');
   const emailTargetEl = document.getElementById('emailTargetText');
   if (emailNoticeEl && emailTargetEl) {
     if (sendEmail && email) {
       emailNoticeEl.style.display = 'flex';
-      emailTargetEl.textContent = `Official tax invoice & digital receipt sent to ${email}`;
+
+      // Check if user has configured EmailJS
+      const isEmailJsReady = window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY && EMAILJS_CONFIG.PUBLIC_KEY !== 'YOUR_PUBLIC_KEY';
+
+      if (isEmailJsReady) {
+        emailTargetEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin" style="color: var(--accent-honey);"></i> Sending official receipt to <strong>${email}</strong>...`;
+
+        const itemsFormatted = checkoutState.itemsSnapshot.map(i => `${i.qty}x ${i.name} ($${(i.rawPrice * i.qty).toFixed(2)})`).join('\n');
+        const emailParams = {
+          to_name: name || 'Valued Guest',
+          name: name || 'Valued Guest',
+          to_email: email,
+          user_email: email,
+          email: email,
+          reply_to: email,
+          from_name: 'Cafe Hub',
+          customer_phone: phone || 'Not provided',
+          phone: phone || 'Not provided',
+          order_number: orderNumber,
+          order_items: itemsFormatted,
+          order_total: `$${checkoutState.orderTotal.toFixed(2)}`,
+          pickup_time: '6 - 8 minutes',
+          message: `Order ${orderNumber}\nCustomer: ${name}\nPhone: ${phone}\n\nItems:\n${itemsFormatted}\n\nTotal Paid: $${checkoutState.orderTotal.toFixed(2)}\nEst. Pickup: 6-8 minutes`
+        };
+
+        emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, emailParams, EMAILJS_CONFIG.PUBLIC_KEY)
+          .then((response) => {
+            emailTargetEl.innerHTML = `✅ Real official receipt successfully delivered to <strong>${email}</strong>! Check your inbox.`;
+            showToast('📧 Real email delivered to your inbox!');
+          })
+          .catch((error) => {
+            console.error('EmailJS Delivery Error:', error);
+            emailTargetEl.innerHTML = `⚠️ Receipt prepared for <strong>${email}</strong> (EmailJS: ${error?.text || 'Check API keys'})`;
+          });
+      } else {
+        // Shown when EmailJS keys need to be pasted
+        emailTargetEl.innerHTML = `Official invoice generated for <strong>${email}</strong>. <br><span style="font-size: 0.78rem; color: var(--accent-honey);">🔑 To deliver to actual inboxes, connect your free EmailJS keys in app.js!</span>`;
+      }
     } else {
       emailNoticeEl.style.display = 'none';
     }
