@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cafe Hub ☕ | Where Espresso Meets Main Character Energy</title>
+  <meta name="description" content="Cafe Hub is the ultimate aesthetic cafe for Gen Z, creators, students, and coffee purists. Unique cool menu items, lightning-fast WiFi, and unmatched vibes." />
+  
+  <!-- Google Fonts & Stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- FontAwesome Icons for clean UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Ambient Glow Effects -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Header Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="brand-logo">
+        <div class="logo-badge">☕</div>
+        <div>
+          <div class="brand-title">CAFE HUB</div>
+        </div>
+      </a>
+
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span>Open Now • 8AM – 11PM</span>
+      </div>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#menu" class="nav-link active">The Menu</a></li>
+          <li><a href="#era-matcher" class="nav-link">Era Quiz</a></li>
+          <li><a href="#vibes" class="nav-link">Vibe Check</a></li>
+          <li><a href="#reviews" class="nav-link">Wall of Hype</a></li>
+          <li><a href="#visit" class="nav-link">Visit Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="cart-btn" id="cartToggleBtn" aria-label="Open Order Bag">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span>My Bag</span>
+          <span class="cart-count" id="cartCountBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-tag">
+          <i class="fa-solid fa-sparkles"></i> Unserious Vibes • Serious Coffee
+        </div>
+        <h1 class="hero-title">
+          Where Espresso Meets <br />
+          <span class="highlight">Main Character Energy.</span>
+        </h1>
+        <p class="hero-subtitle">
+          A welcoming sanctuary for coffee obsessives, aesthetic dreamers, study-grinders, and anyone running on iced caffeine and pure dopamine.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#menu" class="btn-primary">
+            <span>Explore The Menu</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <a href="#era-matcher" class="btn-secondary">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Find Your Era Pairing</span>
+          </a>
+        </div>
+
+        <div class="hero-perks">
+          <div class="perk-item">
+            <span class="icon">⚡</span>
+            <span>450 Mbps Fiber WiFi</span>
+          </div>
+          <div class="perk-item">
+            <span class="icon">🔌</span>
+            <span>Power Outlets Everywhere</span>
+          </div>
+          <div class="perk-item">
+            <span class="icon">🐾</span>
+            <span>Dog Friendly</span>
+          </div>
+          <div class="perk-item">
+            <span class="icon">🎧</span>
+            <span>Curated Lo-Fi Beats</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual Card -->
+      <div class="hero-visual-card">
+        <img 
+          src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=900&q=80" 
+          alt="Aesthetic Cafe Hub interior" 
+          class="hero-main-img" 
+        />
+        <div class="hero-floating-card">
+          <div class="floating-drink-info">
+            <img 
+              src="https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=150&q=80" 
+              alt="Iced Matcha Cloud 9" 
+              class="drink-avatar" 
+            />
+            <div>
+              <div class="floating-drink-name">Iced Matcha Cloud 9</div>
+              <div class="floating-drink-desc">Ceremonial Matcha + Strawberry Foam</div>
+            </div>
+          </div>
+          <span class="floating-badge">Trending #1</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Era & Mood Matcher (Interactive Gen-Z Feature) -->
+    <section class="era-section" id="era-matcher">
+      <div class="era-container">
+        <div class="section-tag">
+          <i class="fa-solid fa-bolt"></i> Interactive Mood Matcher
+        </div>
+        <h2 class="section-title">What is your current era today?</h2>
+        <p class="section-desc">
+          Tell us how you are feeling, and we will manifest your exact drink & bite pairing in two seconds flat.
+        </p>
+
+        <!-- Era Chips Selector -->
+        <div class="era-chips-grid">
+          <button class="era-chip active" data-era="lockin">
+            <span>🧠</span> Finals Week / Need to Lock In
+          </button>
+          <button class="era-chip" data-era="romantic">
+            <span>✨</span> Romanticizing My Life
+          </button>
+          <button class="era-chip" data-era="sleepdeprived">
+            <span>💀</span> Running on 3 Hours of Sleep
+          </button>
+          <button class="era-chip" data-era="cleangirl">
+            <span>💅</span> Clean Girl Glow Up Era
+          </button>
+          <button class="era-chip" data-era="heartbroken">
+            <span>💔</span> Heartbroken & Petty
+          </button>
+        </div>
+
+        <!-- Dynamic Result Card -->
+        <div class="era-result-box" id="eraResultContainer">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu-section" id="menu">
+      <div class="menu-header-row">
+        <div>
+          <div class="section-tag">
+            <i class="fa-solid fa-mug-hot"></i> Handcrafted & Aesthetic
+          </div>
+          <h2 class="section-title">The Cafe Hub Menu</h2>
+          <p class="section-desc" style="margin-bottom: 0;">
+            Every single item is crafted with premium ingredients, top-tier beans, and unapologetic character.
+          </p>
+        </div>
+
+        <!-- Real-time Search Box -->
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input 
+            type="text" 
+            id="menuSearchInput" 
+            placeholder="Search items, ingredients, mood..." 
+            autocomplete="off" 
+          />
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-bar">
+        <button class="cat-tab active" data-category="all">
+          <span>🌟</span> All Goodies
+        </button>
+        <button class="cat-tab" data-category="espresso">
+          <span>☕</span> Main Character Brews
+        </button>
+        <button class="cat-tab" data-category="matcha">
+          <span>🍵</span> Matcha & Elixirs
+        </button>
+        <button class="cat-tab" data-category="eats">
+          <span>🥪</span> Savage Eats & Brunch
+        </button>
+        <button class="cat-tab" data-category="sweets">
+          <span>🍰</span> Sweet Eras
+        </button>
+      </div>
+
+      <!-- Sub-filter Pills (Dietary / Vibe) -->
+      <div class="sub-filter-bar">
+        <span style="font-size: 0.8rem; color: var(--text-dim); margin-right: 0.5rem;">Filter by:</span>
+        <button class="diet-pill active" data-diet="all">All Items</button>
+        <button class="diet-pill" data-diet="top-pick">🔥 Gen Z Hit</button>
+        <button class="diet-pill" data-diet="vegan">🌱 Vegan</button>
+        <button class="diet-pill" data-diet="gf">🌾 Gluten-Free</button>
+        <button class="diet-pill" data-diet="high-energy">⚡ High Energy</button>
+      </div>
+
+      <!-- Menu Grid Cards Container -->
+      <div class="menu-grid" id="menuGrid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- Vibe Check & Amenities Section -->
+    <section class="vibe-check-section" id="vibes">
+      <div class="section-tag">
+        <i class="fa-solid fa-compass"></i> Atmosphere & Standards
+      </div>
+      <h2 class="section-title">The Cafe Hub Vibe Check</h2>
+      <p class="section-desc">
+        We designed Cafe Hub as the dream hangout spot: cozy corners, ultra-fast WiFi for remote work, and zero judgment.
+      </p>
+
+      <div class="vibe-grid">
+        <div class="vibe-card">
+          <div class="vibe-icon-circle wifi-circle">
+            <i class="fa-solid fa-wifi"></i>
+          </div>
+          <h3>450 Mbps Fiber WiFi</h3>
+          <p>Stream 4K, attend Zoom calls, or compile massive codebases with zero lag. We got you covered.</p>
+          <button class="wifi-copy-btn" id="copyWifiBtn">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy WiFi Password ("icedoatlatte")</span>
+          </button>
+        </div>
+
+        <div class="vibe-card">
+          <div class="vibe-icon-circle music-circle">
+            <i class="fa-solid fa-headphones"></i>
+          </div>
+          <h3>Curated Soundscapes</h3>
+          <p>Indie-pop, soft lo-fi, neo-soul and bedroom pop at just the right decibel to stimulate deep focus.</p>
+          <span style="font-size: 0.8rem; color: var(--accent-lavender); font-weight: 600;">
+            <i class="fa-brands fa-spotify"></i> Cafe Hub Daily Tape on Spotify
+          </span>
+        </div>
+
+        <div class="vibe-card">
+          <div class="vibe-icon-circle power-circle">
+            <i class="fa-solid fa-plug"></i>
+          </div>
+          <h3>Power at Every Seat</h3>
+          <p>No more crouching in dark corners fighting for the sole working wall outlet. Every single booth has dual outlets + USB-C fast charging.</p>
+          <span style="font-size: 0.8rem; color: var(--accent-honey); font-weight: 600;">
+            ⚡ 65W Fast Charging Ready
+          </span>
+        </div>
+
+        <div class="vibe-card">
+          <div class="vibe-icon-circle pet-circle">
+            <i class="fa-solid fa-paw"></i>
+          </div>
+          <h3>Dog Friendly Always</h3>
+          <p>Bring your best four-legged friend along. Free oat puppuccinos with whipped cream are on the house for every good boy and girl!</p>
+          <span style="font-size: 0.8rem; color: var(--accent-pink); font-weight: 600;">
+            🐾 100% Pup Approved
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wall of Hype (Reviews) -->
+    <section class="reviews-section" id="reviews">
+      <div class="section-tag">
+        <i class="fa-solid fa-heart"></i> The Wall of Hype
+      </div>
+      <h2 class="section-title">What the community says</h2>
+      <p class="section-desc">Unfiltered opinions from fellow coffee heads, laptop dwellers, and pastry addicts.</p>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="reviewer-meta">
+            <img 
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" 
+              alt="Sarah" 
+              class="reviewer-avatar" 
+            />
+            <div class="reviewer-info">
+              <h4>Chloe Vance</h4>
+              <span>@chloe.in.her.era • Student & Creator</span>
+            </div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+          <p>"The Delulu Lemon Cold Brew literally dragged me through midterms. Plus the aesthetic inside is immaculate for vlog cutaways. 10/10 no notes."</p>
+          <span class="review-order-tag">Ordered: Delulu Cold Brew + Matcha Cloud 9</span>
+        </div>
+
+        <div class="review-card">
+          <div class="reviewer-meta">
+            <img 
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" 
+              alt="Alex" 
+              class="reviewer-avatar" 
+            />
+            <div class="reviewer-info">
+              <h4>Alex Chen</h4>
+              <span>@techbro_alex • Full Stack Dev</span>
+            </div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+          <p>"The WiFi here is actually faster than my home fiber. The Smashed & Unbothered avocado toast is crispy perfection and the outlets actually work."</p>
+          <span class="review-order-tag">Ordered: Smashed & Unbothered + Overthinking at 2 AM</span>
+        </div>
+
+        <div class="review-card">
+          <div class="reviewer-meta">
+            <img 
+              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80" 
+              alt="Maya" 
+              class="reviewer-avatar" 
+            />
+            <div class="reviewer-info">
+              <h4>Maya Patel</h4>
+              <span>@mayapatel • Graphic Designer</span>
+            </div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+          <p>"The Side Eye Croissant filled with molten pistachio butter is an emotional experience. The baristas are genuinely the friendliest people alive."</p>
+          <span class="review-order-tag">Ordered: Side Eye Croissant + Main Character Energy</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Slide-out Order Bag Drawer -->
+  <div class="cart-drawer-overlay" id="cartDrawerOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Your Bag">
+    <div class="cart-drawer-header">
+      <h3>
+        <i class="fa-solid fa-bag-shopping" style="color: var(--accent-terracotta);"></i>
+        <span>Your Order Bag</span>
+      </h3>
+      <button class="close-drawer-btn" id="closeCartBtn" aria-label="Close Bag">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Items list in bag -->
+    <div class="cart-items-list" id="cartItemsList">
+      <!-- Injected by app.js -->
+    </div>
+
+    <!-- Drawer Summary & Checkout -->
+    <div class="cart-drawer-footer">
+      <div class="cart-summary-line">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">$0.00</span>
+      </div>
+      <div class="cart-summary-line">
+        <span>Estimated Tax (8.5%)</span>
+        <span id="cartTax">$0.00</span>
+      </div>
+      <div class="cart-summary-line total">
+        <span>Total Due</span>
+        <span id="cartTotal">$0.00</span>
+      </div>
+      <button class="checkout-btn" onclick="handleCheckout()">
+        <span>Manifest Order • Place Pickup</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Checkout Success Modal -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal-card">
+      <div class="modal-icon-bounce">☕✨</div>
+      <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Order Manifested!</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        The baristas are already crafting your drinks with main character precision.
+      </p>
+      
+      <div class="order-token" id="modalOrderNumber">#HUB-8842</div>
+      
+      <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 2rem;">
+        Estimated preparation time: <strong>6 - 8 minutes</strong>. Pick up at the neon counter!
+      </p>
+      
+      <button class="btn-primary" id="closeModalBtn" style="width: 100%; justify-content: center;">
+        Awesome, Got It!
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer id="visit">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#" class="brand-logo" style="margin-bottom: 1rem;">
+          <div class="logo-badge">☕</div>
+          <div class="brand-title">CAFE HUB</div>
+        </a>
+        <p>
+          Craft coffee, artisanal bakery items, and aesthetic refuge for creators, thinkers, and chillers.
+        </p>
+        <div class="social-pills">
+          <a href="#" class="social-pill" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-pill" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" class="social-pill" aria-label="Spotify"><i class="fa-brands fa-spotify"></i></a>
+          <a href="#" class="social-pill" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Menu Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="#menu">Main Character Brews</a></li>
+          <li><a href="#menu">Matcha & Tonics</a></li>
+          <li><a href="#menu">Savage Eats</a></li>
+          <li><a href="#menu">Sweet Eras</a></li>
+          <li><a href="#era-matcher">Mood Matcher</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Hours & Vibes</h4>
+        <ul class="footer-links">
+          <li style="color: var(--text-muted);">Mon – Fri: 7:30 AM – 11:00 PM</li>
+          <li style="color: var(--text-muted);">Sat – Sun: 8:00 AM – 11:30 PM</li>
+          <li style="color: var(--accent-honey); margin-top: 0.5rem;">Happy Hour: 3PM – 5PM (Half-off Cold Brews)</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Find The Hub</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.8rem;">
+          📍 104 Neon Boulevard, Suite 400<br />
+          Near University Square & Creative District
+        </p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          📞 (555) 482-3283<br />
+          ✉️ hello@cafehub.co
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 Cafe Hub. All rights reserved. Keep sipping.</div>
+      <div>Designed with ☕ & pure dopamine for all coffee lovers.</div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
